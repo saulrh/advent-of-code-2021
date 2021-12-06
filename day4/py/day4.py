@@ -98,7 +98,7 @@ def parse_problem(lines):
 
 
 
-with open("data/day4_example.txt", 'r') as f:
+with open("../example.txt", 'r') as f:
     example_guesses, example_boards = parse_problem(f.readlines())
 
 assert len(example_guesses) == 27
@@ -123,14 +123,14 @@ for board in example_boards:
 assert any(board.won() for board in example_boards)
 assert example_boards[2].score() == 4512
 
-with open("data/day4.txt", 'r') as f:
+with open("../input.txt", 'r') as f:
     guesses, boards = parse_problem(f.readlines())
 for guess in guesses:
     for board in boards:
         board.guess(guess)
     winners = [b for b in boards if b.won()]
     if winners:
-        print(winners[0].score())
+        print("Score of first winner", winners[0].score())
         break
 
 remaining = example_boards
@@ -170,4 +170,4 @@ for guess in guesses:
     last_winner.guess(guess)
     if last_winner.won():
         break
-print(last_winner.score())
+print("Score of last winner", last_winner.score())
