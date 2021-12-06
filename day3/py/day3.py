@@ -80,33 +80,29 @@ def compute_co2(data):
     assert len(data) == 1
     return to_int(data[0])
 
-with open("data/day3_example.txt", 'r') as f:
+with open("../example.txt", 'r') as f:
     example = [parse_line(l) for l in f.readlines()]
 
 gamma_example, epsilon_example = gamma_epsilon(example)
-print(gamma_example)
-print(epsilon_example)
 assert gamma_example == 22
 assert epsilon_example == 9
 oxygen_example = compute_oxygen(example)
-print(oxygen_example)
 assert oxygen_example == 23
 co2_example = compute_co2(example)
-print(co2_example)
 assert co2_example == 10
 
-with open(sys.argv[1], 'r') as f:
+with open("../input.txt", 'r') as f:
     data = [parse_line(l) for l in f.readlines()]
 
 width = len(data[0])
 assert all(len(l) == width for l in data)
 
 gamma, epsilon = gamma_epsilon(data)
-print(gamma, epsilon)
-print(gamma * epsilon)
+print("gamma, epsilon", gamma, epsilon)
+print("gamma * epsilon", gamma * epsilon)
 oxygen = compute_oxygen(data)
-print(oxygen)
+print("oxygen", oxygen)
 co2 = compute_co2(data)
 assert oxygen * co2 > 851
-print(co2)
-print(oxygen * co2)
+print("co2", co2)
+print("oxygen * co2", oxygen * co2)
