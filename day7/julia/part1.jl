@@ -1,3 +1,5 @@
+#!/usr/bin/env julia
+
 using Test
 using DelimitedFiles
 
@@ -38,5 +40,7 @@ example = readdata("../example.txt")
 @test solve(example, cost2) == 168
 
 input = readdata("../input.txt")
+println(solve(input, cost1))
 @test solve(input, cost1) == 343441
 println(solve(input, cost2))
+@test solve(input, cost2) == 98925151
