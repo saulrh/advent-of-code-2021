@@ -131,4 +131,7 @@ unittest {
 unittest {
   auto data = parsefile("../input.txt");
   auto basins = data.basins();
+  int[] basin_sizes = data.basins().byValue.map!(pts => pts.length.to!int()).array();
+  sort(basin_sizes);
+  assert(basin_sizes[basin_sizes.length - 3 .. basin_sizes.length].product() == 1076922);
 }
