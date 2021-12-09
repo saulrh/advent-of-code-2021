@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"Saul Reynolds-Haertle"
+	],
+	"copyright": "Copyright © 2021, Saul Reynolds-Haertle",
+	"description": "AoC day 9",
+	"license": "proprietary",
+	"name": "day9"
+}
