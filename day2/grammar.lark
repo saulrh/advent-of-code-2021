@@ -1,0 +1,5 @@
+start: problem+
+
+problem: DIR _WSI INT _EOL
+
+DIR: "forward" | "down" | "up"

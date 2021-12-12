@@ -1,0 +1,11 @@
+%ignore _WSI
+
+start: header+ _EOL? problem+
+
+header: INT _COMMA?
+
+problem: dim1~5
+
+dim1: dim2~5 _EOL
+
+dim2: INT
