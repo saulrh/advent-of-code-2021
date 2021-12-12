@@ -1,0 +1,5 @@
+start: problem+
+
+problem: BIT+ _EOL
+
+BIT: "1" | "0"

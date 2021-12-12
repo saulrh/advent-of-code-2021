@@ -1,0 +1,3 @@
+start: problem+
+
+problem: INT _EOL
