@@ -9,9 +9,11 @@ import enum
 import dataclasses
 from typing import Dict
 
+
 class Marked(enum.Enum):
     CLEAR = enum.auto()
     MARKED = enum.auto()
+
 
 @dataclasses.dataclass
 class Tile:
@@ -20,11 +22,16 @@ class Tile:
     col: int
     status: Marked
 
+
 class Board:
+    _board_idx = 0
+
     def __init__(self, tiles):
         self.by_number = {}
         self.by_place = {}
         self.last_guess = None
+        self.idx = Board._board_idx
+        Board._board_idx += 1
         for tile in tiles:
             self.by_number[tile.number] = tile
             self.by_place[tile.row, tile.col] = tile
@@ -44,11 +51,16 @@ class Board:
     def score(self):
         if not self.won():
             raise RuntimeError("Boards only have a score once they've won")
-        subscore = sum(t.number for t in self.by_number.values() if t.status == Marked.CLEAR)
+        subscore = sum(
+            t.number for t in self.by_number.values() if t.status == Marked.CLEAR
+        )
         return self.last_guess * subscore
 
+    def __hash__(self):
+        return hash(self.idx)
+
     def __rich__(self):
-        table = rich.table.Table.grid(padding = (0, 1))
+        table = rich.table.Table.grid(padding=(0, 1))
         for _ in range(5):
             table.add_column()
         for r in range(5):
@@ -63,19 +75,19 @@ class Board:
             table.add_row(*row)
         table.add_row()
         return table
-        
 
-PATTERNS =(
-    [[(r, c) for r in range(5)] for c in range(5)] +
-    [[(r, c) for c in range(5)] for r in range(5)]
-)
+
+PATTERNS = [[(r, c) for r in range(5)] for c in range(5)] + [
+    [(r, c) for c in range(5)] for r in range(5)
+]
+
 
 def parse_board(lines):
     assert len(lines) == 5
     tiles = []
     for row_idx, row in enumerate(lines):
         for col_idx, col in enumerate(re.split(" +", row)):
-            if col == '':
+            if col == "":
                 continue
             tiles.append(Tile(int(col), row_idx, col_idx, Marked.CLEAR))
     assert len(tiles) == 25
@@ -97,77 +109,27 @@ def parse_problem(lines):
     return guesses, boards
 
 
-
-with open("../example.txt", 'r') as f:
-    example_guesses, example_boards = parse_problem(f.readlines())
-
-assert len(example_guesses) == 27
-assert len(example_boards) == 3
-assert all(not board.won() for board in example_boards)
-
-for guess in example_guesses[0:5]:
-    for board in example_boards:
-        board.guess(guess)
-
-assert all(not board.won() for board in example_boards)
-
-for guess in example_guesses[5:11]:
-    for board in example_boards:
-        board.guess(guess)
-
-assert all(not board.won() for board in example_boards)
-
-for board in example_boards:
-    board.guess(example_guesses[11])
-
-assert any(board.won() for board in example_boards)
-assert example_boards[2].score() == 4512
-
-with open("../input.txt", 'r') as f:
-    guesses, boards = parse_problem(f.readlines())
-for guess in guesses:
-    for board in boards:
-        board.guess(guess)
-    winners = [b for b in boards if b.won()]
-    if winners:
-        print("Score of first winner", winners[0].score())
-        break
-
-remaining = example_boards
-winners = []
-for guess in example_guesses:
-    for board in remaining:
-        board.guess(guess)
-        if board.won():
-            winners.append(board)
-    for board in winners:
-        if board in remaining:
-            remaining.remove(board)
-    if len(remaining) == 1:
-        last_winner = remaining[0]
-        break
-for guess in example_guesses:
-    last_winner.guess(guess)
-    if last_winner.won():
-        break
-assert last_winner.score() == 1924
+def scores(guesses, boards) -> int:
+    won = set()
+    for guess in guesses:
+        for board in boards:
+            board.guess(guess)
+        winners = {b for b in boards if b.won()}
+        yield from [b.score() for b in winners - won]
+        won = winners
 
 
-remaining = boards
-winners = []
-for guess in guesses:
-    for board in remaining:
-        board.guess(guess)
-        if board.won():
-            winners.append(board)
-    for board in winners:
-        if board in remaining:
-            remaining.remove(board)
-    if len(remaining) == 1:
-        last_winner = remaining[0]
-        break
-for guess in guesses:
-    last_winner.guess(guess)
-    if last_winner.won():
-        break
-print("Score of last winner", last_winner.score())
+with open("../example.txt", "r") as f:
+    results = list(scores(*parse_problem(f.readlines())))
+    assert results[0] == 4512
+    assert results[-1] == 1924
+
+with open("../input.txt", "r") as f:
+    results = list(scores(*parse_problem(f.readlines())))
+    assert results[0] == 67716
+    assert results[-1] == 1830
+
+with open(sys.argv[1], "r") as f:
+    results = list(scores(*parse_problem(f.readlines())))
+    print("Score of first winner", results[0])
+    print("Score of last winner", results[-1])
