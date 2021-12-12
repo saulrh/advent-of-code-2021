@@ -1,0 +1,3 @@
+start: problem+
+
+problem: WORD "-" WORD _EOL
