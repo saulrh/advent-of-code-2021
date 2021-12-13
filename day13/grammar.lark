@@ -1,0 +1,10 @@
+%ignore _WSI
+
+start: problem1+ problem2+
+
+problem1: INT "," INT _EOL
+
+problem2: "fold" "along" AXIS "=" INT _EOL
+
+AXIS: "y" | "x"
+
