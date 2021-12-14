@@ -1,0 +1,7 @@
+%ignore _WSI
+
+start: problem1 problem2+
+
+problem1: LETTER+ _EOL
+
+problem2: LETTER LETTER "->" LETTER _EOL
