@@ -29,7 +29,8 @@ def neighborhood(pt) -> Generator[Point, None, None]:
 class Problem:
     grid: Dict[Point, bool]
     decompress: List[bool]
-    infinity: bool
+    infinity: bool = False
+    steps: int = 0
 
     @property
     def min_row(self) -> int:
@@ -68,6 +69,7 @@ class Problem:
         self.infinity = self.decompress[
             bits_to_number(self.infinity for n in neighborhood((0, 0)))
         ]
+        self.steps += 1
         self.grid = next_grid
 
     @property
@@ -107,28 +109,28 @@ def load_problem(text):
     for row, line in enumerate(it):
         for col, char in enumerate(line):
             grid[row, col] = char == "#"
-    return Problem(grid, decompress, False)
+    return Problem(grid, decompress)
 
 
 def main():
     ex = load_problem(pathlib.Path("../example.txt").read_text())
-    print(ex)
-    print(ex.lit_bits)
-    print()
-    ex.step()
-    print(ex)
-    print(ex.lit_bits)
-    print()
-    ex.step()
-    print(ex)
-    print(ex.lit_bits)
-    print()
+    ex_knowns = {
+        2: 35,
+        50: 3351,
+    }
+    while ex.steps < 50:
+        ex.step()
+        if ex.step in ex_knowns:
+            assert(ex.lit_bits == ex_knowns[ex.step])
+        print(ex.steps, ex.lit_bits)
 
     inp = load_problem(pathlib.Path("../input.txt").read_text())
-    print(inp)
-    print()
-    inp.step()
-    print(inp)
-    print()
-    inp.step()
-    print(inp.lit_bits)
+    inp_knowns = {
+        2: 5583,
+        50: 19592,
+    }
+    while inp.steps < 50:
+        inp.step()
+        if inp.step in inp_knowns:
+            assert(inp.lit_bits == inp_knowns[inp.step])
+        print(inp.steps, inp.lit_bits)
