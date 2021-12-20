@@ -89,8 +89,22 @@ ex <- enhance(ex)
 sum(ex$image)
 if (sum(ex$image) != 35) { stop() }
 
+for (idx in 3:50) {
+    ex <- enhance(ex)
+}
+sum(ex$image)
+if (sum(ex$image) != 3351) { stop() }
+
+
+
 inp <- enhance(inp)
 inp <- enhance(inp)
 sum(inp$image)
 if (sum(inp$image) <= 5565) { stop() }
 if (sum(inp$image) != 5583) { stop() }
+
+for (idx in 3:50) {
+    inp <- enhance(inp)
+}
+sum(inp$image)
+if (sum(inp$image) != 19592) { stop() }
