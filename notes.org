@@ -1,0 +1,39 @@
+* Languages 
+  - [ ] Ada
+  - [X] assembly
+  - [X] C
+  - [ ] C#
+  - [X] C++
+  - [ ] Chapel
+  - [X] Clojure
+  - [ ] COBOL
+  - [X] D
+  - [ ] Dart
+  - [ ] Erlang
+  - [ ] F#
+  - [ ] Fortran
+  - [ ] Go
+  - [X] Haskell
+  - [ ] Java
+  - [X] JavaScript
+  - [X] Julia
+  - [ ] Kotlin
+  - [X] Lisp
+  - [X] Lua
+  - [X] nim
+  - [X] OCaml
+  - [X] octave
+  - [ ] Pascal
+  - [X] Perl
+  - [ ] PHP
+  - [X] prolog
+  - [X] Python
+  - [X] R
+  - [ ] Racket
+  - [ ] Ruby
+  - [X] Rust
+  - [ ] Scala
+  - [ ] Smalltalk
+  - [X] SQL
+  - [ ] Swift
+  - [X] Zig
