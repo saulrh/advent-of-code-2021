@@ -12,6 +12,7 @@ import functools as ft
 
 EYE = np.eye(3, dtype=np.int32)
 
+
 def rotations():
     permutations = list(np.array(p) for p in it.permutations(EYE))
     row_invert = [
@@ -23,10 +24,13 @@ def rotations():
     symmetries = [np.dot(r, p) for r, p in it.product(inversions, permutations)]
     return [m for m in symmetries if np.linalg.det(m) == 1]
 
+
 ROTATIONS = rotations()
 
-def assert_vec_eq(a, b, message = None):
+
+def assert_vec_eq(a, b, message=None):
     assert np.all(a == b), message or f"{r_pt(a)} != {r_pt(b)}"
+
 
 def load_problem(s):
     output = []
@@ -40,7 +44,7 @@ def load_problem(s):
                 output.append(np.stack(scanner).T)
             scanner = []
         else:
-            scanner.append(np.array([int(w) for w in line.split(',')], dtype=np.int32))
+            scanner.append(np.array([int(w) for w in line.split(",")], dtype=np.int32))
     output.append(np.stack(scanner).T)
     return output
 
@@ -48,7 +52,8 @@ def load_problem(s):
 def coincidences(s1, s2):
     s1_set = {tuple(c) for c in s1.T}
     s2_set = {tuple(c) for c in s2.T}
-    return(len(s1_set & s2_set))        
+    return len(s1_set & s2_set)
+
 
 def overlap(s1, s2):
     s1_len = s1.shape[1]
@@ -63,8 +68,10 @@ def overlap(s1, s2):
                     return rot, translation
     return None
 
+
 def r_pt(pt):
     return "[" + ",".join(str(i) for i in pt) + "]"
+
 
 def slam(sensors):
     # Define sensor 0 to be at 0, 0, 0
@@ -84,14 +91,18 @@ def slam(sensors):
                     sensors[other_idx] = other
                     positions[other_idx] = (other_rot, other_in_s0)
                     frontier.append(other_idx)
-                    print(f"Used {cur_idx} to position {other_idx} at {r_pt(other_in_s0)} ({len(positions)}/{len(sensors)} done)")
+                    print(
+                        f"Used {cur_idx} to position {other_idx} at {r_pt(other_in_s0)} ({len(positions)}/{len(sensors)} done)"
+                    )
     return positions
+
 
 def write_alignments(alignments, f):
     for idx, (rot, s_in_s0) in alignments.items():
         rots = ",".join(str(r) for r in rot.flat)
         pos = ",".join(str(r) for r in s_in_s0)
         f.write(f"{idx},{rots},{pos}\n")
+
 
 def read_alignments(s):
     lines = (l.strip() for l in s.splitlines())
@@ -104,6 +115,7 @@ def read_alignments(s):
         pos = pos.reshape((3,))
         yield int(idx), (rot, pos)
 
+
 def apply_alignments(alignments, sensors):
     for sensor_idx in range(len(sensors)):
         sensor = sensors[sensor_idx]
@@ -113,8 +125,9 @@ def apply_alignments(alignments, sensors):
         add = np.tile(sensor_in_s0, (sensor_len, 1))
         sensors[sensor_idx] = sensors[sensor_idx] + add.T
 
+
 def main():
-    ex1 = load_problem(pathlib.Path('../input.txt').read_text())
+    ex1 = load_problem(pathlib.Path("../input.txt").read_text())
 
     # s1_rot, s1_in_s0 = overlap(ex1[0], ex1[1])
     # ex1[1] = s1_rot.dot(ex1[1])
@@ -143,7 +156,9 @@ def main():
     print(len(all_pts))
 
     max_dist = 0
-    for (_, s1_in_s0), (_, s2_in_s0) in it.product(alignments.values(), alignments.values()):
+    for (_, s1_in_s0), (_, s2_in_s0) in it.product(
+        alignments.values(), alignments.values()
+    ):
         s2_in_s1 = s2_in_s0 - s1_in_s0
         print(r_pt(s1_in_s0), r_pt(s2_in_s0), r_pt(s2_in_s1), sum(abs(s2_in_s1)))
         max_dist = max(max_dist, sum(abs(s2_in_s1)))
