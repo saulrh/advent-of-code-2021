@@ -1,0 +1,17 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '(:day1/main) :silent t))
+
+(defpackage :ros.script.part1.3848442482
+  (:use :cl))
+(in-package :ros.script.part1.3848442482)
+
+(defun main (input-filename &rest argv)
+  (declare (ignorable argv))
+  (day1/main:solve input-filename))
+;;; vim: set ft=lisp lisp:
