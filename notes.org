@@ -1,7 +1,7 @@
 * Languages 
   - [ ] Ada
   - [X] assembly
-  - [ ] C
+  - [X] C
   - [ ] C#
   - [X] C++
   - [ ] Chapel
@@ -38,3 +38,11 @@
   - [ ] Swift
   - [X] TypeScript
   - [X] Zig
+
+
+* Problems that I have to redo
+
+  Day04 bingo
+  Day08 7-seg displays
+  Day19 scanners
+  Day23 amphipods
