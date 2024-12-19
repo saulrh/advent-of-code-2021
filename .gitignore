@@ -1,3 +1,4 @@
 day*/*_problem*.csv
 day*/*.json
 day04/friend-input.txt
+day*/input.txt
