@@ -12,7 +12,7 @@
   - [ ] Dart
   - [ ] Erlang
   - [ ] F#
-  - [ ] Fortran
+  - [X] Fortran
   - [ ] Go
   - [X] Haskell
   - [ ] Java
@@ -42,7 +42,6 @@
 
 * Problems that I have to redo
 
-  Day04 bingo
   Day08 7-seg displays
   Day19 scanners
   Day23 amphipods
