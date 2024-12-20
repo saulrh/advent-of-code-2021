@@ -35,13 +35,12 @@
   - [ ] Scala
   - [ ] Smalltalk
   - [X] SQL
-  - [ ] Swift
+  - [X] Swift
   - [X] TypeScript
   - [X] Zig
 
 
 * Problems that I have to redo
 
-  Day08 7-seg displays
   Day19 scanners
   Day23 amphipods

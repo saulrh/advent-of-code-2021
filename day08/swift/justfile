@@ -1,0 +1,15 @@
+run:
+	podman run \
+	--replace \
+	--rm \
+	--name swift-latest \
+	-v ./:/aoc:Z \
+	-v ../input.txt:/root/Documents/input.txt:Z \
+	-v ../example1.txt:/root/Documents/example1.txt:Z \
+	-v ../example2.txt:/root/Documents/example2.txt:Z \
+	--workdir '/aoc' \
+	swift:latest \
+	swift run Aoc21Day08
+
+watch:
+	rg --files --type swift | entr -c just run
