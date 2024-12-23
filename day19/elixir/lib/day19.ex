@@ -1,4 +1,14 @@
 defmodule Day19 do
+  defp progress(done, left) do
+    ProgressBar.render(done, done + left,
+      bar: "═",
+      blank: "─",
+      bar_color: IO.ANSI.green(),
+      blank_color: IO.ANSI.red(),
+      suffix: :count
+    )
+  end
+
   defp ingest(fname) do
     parse(File.read!(fname))
   end
@@ -55,39 +65,54 @@ defmodule Day19 do
     |> Enum.find(fn el -> el end)
   end
 
-  def register(registered, []) do
-    registered
-  end
+  def register(registered, frontier, unregistered) do
+    case MapSet.size(unregistered) do
+      0 ->
+        MapSet.union(registered, frontier)
 
-  def register(registered, [u_cand | unregistered]) do
-    case Enum.find_value(registered, fn u_reg -> find_alignment(u_reg, u_cand) end) do
-      # rotate to try a new element of the unregistered list,
-      # termination is guaranteed because we're assured that the whole
-      # set of scanners is a single connected component. this happens
-      # when the unregistered candidates are in the wrong order and
-      # the current candidate is only connected to scanners that are
-      # after it in the unregistered candidate list.
-      #
-      # append to end is slow, but these lists will be at most length
-      # 40 so this isn't a huge problem.
-      nil ->
-        register(registered, unregistered ++ [u_cand])
+      _ ->
+        {new_frontier, new_unregistered} =
+          Task.async_stream(
+            unregistered,
+            fn u_cand ->
+              found = Enum.find_value(frontier, fn u_reg -> find_alignment(u_reg, u_cand) end)
 
-      # if we found something, it goes into the registered set and we
-      # move on to the rest of the unregistered candidates
-      {new_beacons, new_scanner_pos} ->
-        n_reg = length(registered) + 1
-        n_unreg = length(unregistered)
-        ProgressBar.render(n_reg, n_reg + n_unreg)
-        register([{new_beacons, new_scanner_pos} | registered], unregistered)
+              case found do
+                {reg_beacons, reg_pos} -> {reg_beacons, reg_pos}
+                nil -> {u_cand, nil}
+              end
+            end,
+            timeout: :infinity
+          )
+          |> Enum.map(fn {:ok, el} -> el end)
+          |> Enum.split_with(fn el -> elem(el, 1) end)
+
+        # Move everything we found into the frontier.
+        new_registered = MapSet.union(registered, frontier)
+        # we know that none of the remaining unregistered scanners
+        # connect to any of the registered scanners, so we can skip
+        # those entirely in future iteratoins and only retry the
+        # remaining unregistered scanners against the new frontier.
+        new_frontier = MapSet.new(new_frontier)
+        # move everything we didn't find into our new unregistered
+        # set.
+        new_unregistered = for e <- new_unregistered, into: MapSet.new(), do: elem(e, 0)
+
+        progress(
+          MapSet.size(new_frontier) + MapSet.size(new_registered),
+          MapSet.size(new_unregistered)
+        )
+
+        register(new_registered, new_frontier, new_unregistered)
     end
   end
 
   def part1(result) do
-    union =
-      Enum.reduce(result, MapSet.new(), fn {beacons, _pos}, acc -> MapSet.union(beacons, acc) end)
-
-    MapSet.size(union)
+    MapSet.size(
+      for {beacons, _pos} <- result, reduce: MapSet.new() do
+        acc -> MapSet.union(beacons, acc)
+      end
+    )
   end
 
   def part2(result) do
@@ -98,17 +123,19 @@ defmodule Day19 do
   end
 
   def do_problems(input) do
-    [registered | unregistered] = input
-    result = register([{registered, Point.zero()}], unregistered)
-    IO.puts(part1(result))
-    IO.puts(part2(result))
+    [scanner_zero | unregistered] = input
+    scanner_zero = MapSet.new([{scanner_zero, Point.zero()}])
+    unregistered = MapSet.new(unregistered)
+    progress(1, MapSet.size(unregistered))
+    result = register(MapSet.new(), scanner_zero, unregistered)
+    {part1(result), part2(result)}
   end
 
   def main do
     fname = "../example_1.txt"
-    do_problems(ingest(fname))
+    {79, 3621} = do_problems(ingest(fname))
 
     fname = "../input.txt"
-    do_problems(ingest(fname))
+    {491, 13374} = do_problems(ingest(fname))
   end
 end
