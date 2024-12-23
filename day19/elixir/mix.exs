@@ -22,7 +22,8 @@ defmodule Day19.MixProject do
   defp deps do
     [
       {:typed_struct, "~> 0.3.0"},
-      {:progress_bar, "> 0.0.0"}
+      {:progress_bar, "> 0.0.0"},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 end

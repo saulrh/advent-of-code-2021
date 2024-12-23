@@ -5,9 +5,9 @@ defmodule Point do
   use TypedStruct
 
   typedstruct enforce: true do
-    field :x, Integer.t()
-    field :y, Integer.t()
-    field :z, Integer.t()
+    field :x, integer()
+    field :y, integer()
+    field :z, integer()
   end
 
   defimpl String.Chars, for: Point do
