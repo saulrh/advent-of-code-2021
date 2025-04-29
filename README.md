@@ -1,4 +1,13 @@
-* Languages 
+# Advent of Code 2021 in a different language every day
+
+I completed Advent of Code 2021 using a different language for every
+day. I did have to give up on a couple days and hack out solutions in
+python to stay current with the group I was competing with, but it
+only took me a little work to come back later and fix those days up
+appropriately.
+
+## Languages
+
   - [ ] Ada
   - [X] assembly
   - [X] C
@@ -41,11 +50,11 @@
   - [X] Zig
 
 
-* Problems that I have to redo
+## Tracking for days I have to redo in a language I haven't used yet
 
-* Results
+# Results
 
-** By day:
+## By day:
 
 | day01 | cl         |                                                                   |
 | day02 | ocaml      |                                                                   |
@@ -77,8 +86,7 @@
 | day24 | sorta_rust | I ended up doing this one by hand; none of the code participates. |
 | day25 | c          |                                                                   |
 
-
-** By solution:
+## By solution:
 
 | asm        | day06 |                                                                              |
 | c          | day25 |                                                                              |
